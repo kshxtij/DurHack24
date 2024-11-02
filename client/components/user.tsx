@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings } from "lucide-react";
 
-export default function User() {
+type Props = {
+  name: string;
+  picture?: string;
+}
+export default function User({ name, picture }: Props) {
   const [open, setOpen] = useState(false);
-  const name = "Khalid Belhadj";
   const role = "admin";
 
   return (
@@ -28,11 +31,7 @@ export default function User() {
             className="h-12 w-full items-center gap-2 p-2 bg-background hover:bg-background shadow-sm"
           >
             <>
-              <div
-                className={cn(
-                  "aspect-square h-full rounded-[2px] bg-foreground/30"
-                )}
-              ></div>
+              <img src={picture} className="w-8 h-8 rounded-full" />
               <div className="truncate text-left">
                 <div className="truncate font-bold">{name}</div>
                 <p className="text-xs text-muted-foreground/60">{role}</p>
@@ -48,7 +47,9 @@ export default function User() {
             <Settings />
             Settings
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => {
+            window.location.href = "/api/auth/logout";
+          }}>
             <LogOut /> Sign out
           </DropdownMenuItem>
         </DropdownMenuGroup>

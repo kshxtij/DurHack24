@@ -7,6 +7,8 @@ import Providers from "@/components/providers";
 import User from "@/components/user";
 import { Separator } from "@/components/ui/separator";
 import { Service } from "@/lib/service";
+import { getSession } from "@auth0/nextjs-auth0";
+import { redirect } from "next/navigation";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +26,25 @@ export const metadata: Metadata = {
   description: "", // TODO:
 };
 
-export default function RootLayout({
+type User = {
+  nickname: string;
+  picture: string;
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const s = await getSession()
+  if (!s) {
+    redirect("/api/auth/login")
+    return null
+  }
+
+  const { nickname, picture } = s.user as User
+  
   return (
     <html lang="en">
       <Providers>
@@ -36,7 +52,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen h-screen`}
         >
           <div className="flex w-full h-full">
-            <Sidebar />
+            <Sidebar name={nickname} picture={picture} />
             <main className="flex-grow p-3">{children}</main>
           </div>
         </body>
@@ -45,7 +61,7 @@ export default function RootLayout({
   );
 }
 
-function Sidebar() {
+async function Sidebar({ name, picture }: { name: string; picture?: string }) {
   const services: Service[] = [
     {
       id: "1",
@@ -62,7 +78,7 @@ function Sidebar() {
   ]
   return (
     <div className="h-full w-60 bg-muted p-3 flex flex-col gap-2">
-      <User />
+      <User name={name} picture={picture}/>
       <Link
         href="/"
         className="flex items-center gap-1 rounded-lg bg-background py-2 px-3 shadow-sm"
