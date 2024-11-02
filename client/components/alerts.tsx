@@ -2,17 +2,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 
-// type MessageLog = {
-//   level: "info" | "warning" | "error" | "critical";
-//   content: string;
-//   time: Date;
-// };
+export function generateContent() {
+return {
+        time: new Date(),
+        level: "info",
+        content: Math.random().toString(36).substring(2, 22),
+      }
+}
+export type MessageLog = {
+  level: "info" | "warning" | "error" | "critical";
+  content: string;
+  time: Date;
+};
 
-// type DataLog = {
-//   name: string;
-//   value: number;
-//   time: Date;
-// };
+type DataLog = {
+  name: string;
+  value: number;
+  time: Date;
+};
 
 type Alert = {
   severity: "low" | "medium" | "high" | "critical";
