@@ -1,7 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-type MessageLog = {
+
+export function generateContent() {
+return {
+        time: new Date(),
+        level: "info",
+        content: Math.random().toString(36).substring(2, 22),
+      }
+}
+export type MessageLog = {
   level: "info" | "warning" | "error" | "critical";
   content: string;
   time: Date;
