@@ -5,6 +5,8 @@ import Link from "next/link";
 import { House } from "lucide-react";
 import Providers from "@/components/providers";
 import User from "@/components/user";
+import { Separator } from "@/components/ui/separator";
+import { Service } from "@/lib/service";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,7 +46,20 @@ export default function RootLayout({
 }
 
 function Sidebar() {
-  const nodes = ["Go Server", "Python Process", "Rust Analysis Tool"];
+  const services: Service[] = [
+    {
+      id: "1",
+      name: "Go Server",
+    },
+    {
+      id: "2",
+      name: "Python Process",
+    },
+    {
+      id: "3",
+      name: "Rust Analysis"
+    }
+  ]
   return (
     <div className="h-full w-60 bg-muted p-3 flex flex-col gap-2">
       <User />
@@ -55,13 +70,14 @@ function Sidebar() {
         <House size={20} />
         Home
       </Link>
-      {nodes.map((node) => (
+      {services.map((service) => (
         <Link
-          key={node}
-          href={`/service/${node.toLowerCase().replace(" ", "-")}`}
+          key={service.id}
+          href={`/service/${service.id}`}
           className="flex items-center gap-1 rounded-lg bg-background py-2 px-3 shadow-sm"
         >
-          {node}
+      <Separator />
+          {service.name}
           <div className="ml-auto w-2 h-2 rounded-full animate-pulse bg-green-500"></div>
         </Link>
       ))}
