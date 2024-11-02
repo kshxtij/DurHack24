@@ -1,11 +1,16 @@
-import { getSession } from "@auth0/nextjs-auth0";
-import { redirect } from "next/navigation";
+import Alerts from "@/components/alerts";
+import Graph from "@/components/graph";
 
-export default async function Home() {
+export default function Home() {
   return (
     <div className="w-full h-full">
       <h1 className="text-2xl font-bold">Home</h1>
-      <div className="bg-red-100 w-full h-full">STUFF HERE</div>
+      <div className="w-full h-full">
+        <div className="h-96 w-full flex gap-2">
+          <Graph className="flex-[2]" />
+          <Alerts className="flex-1" />
+        </div>
+      </div>
     </div>
   );
 }
