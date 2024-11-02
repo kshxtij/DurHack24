@@ -34,7 +34,7 @@ export default function ProjectSwitcher() {
             variant="ghost"
             role="combobox"
             aria-expanded={open}
-            className="h-12 w-full items-center gap-2 p-2 bg-background"
+            className="h-12 w-full items-center gap-2 p-2 bg-background hover:bg-background"
           >
             <>
               <div
