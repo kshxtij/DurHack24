@@ -76,7 +76,6 @@ function Sidebar() {
           href={`/service/${service.id}`}
           className="flex items-center gap-1 rounded-lg bg-background py-2 px-3 shadow-sm"
         >
-      <Separator />
           {service.name}
           <div className="ml-auto w-2 h-2 rounded-full animate-pulse bg-green-500"></div>
         </Link>
