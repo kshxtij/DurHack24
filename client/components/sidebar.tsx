@@ -11,17 +11,16 @@ export default async function Sidebar({
   name: string;
   picture?: string;
 }) {
-    const response = await fetch("http://127.0.0.1:8000/getServices")
+  // const response = await fetch("http://127.0.0.1:8000/getServices");
+  const response = await fetch(
+    "https://assured-grubworm-wrongly.ngrok-free.app/getServices"
+  );
 
   // gives a list of strings
-  const services = await response.json() as {
+  const services = (await response.json()) as {
     id: string;
     service: string;
-  }[]
-
-  
-
-
+  }[];
 
   return (
     <div className="h-full w-60 bg-accent p-3 flex flex-col gap-2 border-r">

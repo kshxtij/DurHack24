@@ -44,12 +44,7 @@ export default function Home() {
           <Alerts className="flex-1" />
         </div>
         <div className="flex-grow min-h-0">
-          <ConsoleTable
-            data={data}
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            columns={columns}
-          />
+          <ConsoleTable data={data} columns={columns} />
         </div>
       </div>
     </div>
