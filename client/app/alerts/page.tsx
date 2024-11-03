@@ -33,6 +33,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { AutomationTable } from "@/components/automations/automations";
+import { columns } from "@/components/automations/columns";
 
 const levelMap = {
     INFO: "info",
@@ -180,11 +182,12 @@ export default function AlertsPage() {
         </AlertDialogContent>
       </AlertDialog>
       <div>
-        {automations?.map((a) => (
+        {/* {automations?.map((a) => (
           <div>
             <p>test</p>
             {a.title}</div>
-        ))}
+        ))} */}
+        <AutomationTable data={automations ?? []} columns={columns} />
       </div>
     </div>
   );

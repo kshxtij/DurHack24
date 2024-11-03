@@ -136,3 +136,11 @@ export async function getAutomations() {
 export async function getAlerts() {
   return await prisma.alert.findMany();
 }
+
+export async function deleteAutomation(id: number) {
+  return await prisma.automation.delete({
+    where: {
+      id,
+    },
+  });
+}

@@ -41,7 +41,7 @@ export default function Sidebar({
           )}
         >
           <Bell size={15} />
-          Alerts
+         Automations 
         </Link>
       </div>
       <Separator />
