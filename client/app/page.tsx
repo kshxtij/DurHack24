@@ -12,6 +12,7 @@ export default function Home() {
   useEffect(() => {
     const ws = new WebSocket(
       "ws://assured-grubworm-wrongly.ngrok-free.app/getAlerts"
+      // "ws://127.0.0.1:8000/getAlerts"
     );
 
     ws.onmessage = (event: MessageEvent) => {

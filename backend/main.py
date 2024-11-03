@@ -17,7 +17,6 @@ import resend
 
 from functools import lru_cache
 from . import config 
-from . import elastic
 
 from elasticsearch import AsyncElasticsearch
 
