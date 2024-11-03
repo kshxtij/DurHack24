@@ -2,41 +2,26 @@ import User from "@/components/user";
 import { Service } from "@/lib/service";
 import { House } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function Sidebar({
+export default async function Sidebar({
   name,
   picture,
 }: {
   name: string;
   picture?: string;
 }) {
-  const services: Service[] = [
-    {
-      id: "1",
-      name: "Go Server",
-    },
-    {
-      id: "2",
-      name: "Python Process",
-    },
-    {
-      id: "3",
-      name: "Rust Analysis",
-    },
+    const response = await fetch("http://127.0.0.1:8000/getServices")
 
-    {
-      id: "4",
-      name: "Node Server",
-    },
-    {
-      id: "5",
-      name: "React App",
-    },
-    {
-      id: "6",
-      name: "Vue App",
-    },
-  ];
+  // gives a list of strings
+  const services = await response.json() as {
+    id: string;
+    service: string;
+  }[]
+
+  
+
+
 
   return (
     <div className="h-full w-60 bg-accent p-3 flex flex-col gap-2 border-r">
@@ -57,7 +42,7 @@ export default function Sidebar({
         >
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full animate-pulse bg-green-500"></div>
-            {service.name}
+            {service.service}
           </div>
         </Link>
       ))}

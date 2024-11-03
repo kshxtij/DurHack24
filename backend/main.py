@@ -80,21 +80,27 @@ async def websocket_endpoint(websocket: WebSocket):
 @app.get("/getServices")
 async def get_services():
     query = {
-        "size": 0,
-        "aggs": {
-            "services": {
-                "terms": {
-                    "field": "service.keyword"
-                }
-            }
+        "size": 10000,
+        "query": {
+            "match_all": {}
         }
     }
-
     resp = await client.search(
         index="log*",
         body=query
     )
 
-    services = resp.get('aggregations', {}).get('services', {}).get('buckets', [])
-    services = [service['key'] for service in services]
-    return services
+    hits = resp.get('hits', {}).get('hits', [])
+    ids = [hit['_source']['id'] for hit in hits]
+    services = [hit['_source']['service'] for hit in hits]
+
+    # get unique combination of ids and services
+    unique_services = []
+    for i in range(len(ids)):
+        obj = {
+            'id': ids[i],
+            'service': services[i]
+        }
+        if  obj not in unique_services:
+            unique_services.append(obj)
+    return unique_services
