@@ -19,10 +19,10 @@ export type MessageLog = {
 };
 
 const colorMap = {
-  low: "ring-2 ring-neutral-400 bg-neutral-50",
-  medium: "ring-2 ring-yellow-400 bg-yellow-50",
-  high: "ring-2 ring-orange-400 bg-orange-50",
-  critical: "ring-2 ring-red-400 bg-red-50",
+  low: "ring-neutral-100",
+  medium: "bg-yellow-100",
+  high: "bg-orange-100",
+  critical: "bg-red-100",
 };
 
 function AlertComp({ alert }: { alert: Alert }) {

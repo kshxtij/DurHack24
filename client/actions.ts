@@ -132,3 +132,7 @@ export async function createAutomation(data:  Omit<Automation, "id">) {
 export async function getAutomations() {
   return await prisma.automation.findMany();
 }
+
+export async function getAlerts() {
+  return await prisma.alert.findMany();
+}

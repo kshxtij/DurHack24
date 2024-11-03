@@ -24,4 +24,5 @@ model Alert {
   createdAt   DateTime @default(now())
   service  String
   severity String
+  title     String
 }

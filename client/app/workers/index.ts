@@ -107,10 +107,20 @@ async function main() {
                 // ok lets send emial because conditonn is true 
                 const { data, error } = await resend.emails.send({
                     from: 'Durhack <no-reply@durhack24.nkdem.net>',
-                    to: ['nikodemb@pm.me'],
+                    to: [`${automation.email}`],
                     subject: `${automation.severity} alert: ${automation.title}`,
                     react: EmailTemplate({ firstName: 'John' }),
                 });
+
+                await prisma.alert.create({
+                    data: {
+                        email: automation.email,
+                        service: automation.service,
+                        severity: automation.severity,
+                        createdAt: new Date(),
+                        title: automation.title,
+                    }
+                })
 
                 if (error) {
                     console.error(error);
