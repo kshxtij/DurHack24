@@ -1,6 +1,6 @@
 "use client";
 
-import { getLogs, getServices } from "@/actions";
+import { getMessageLogs, getServices } from "@/actions";
 import { columns } from "@/components/console/columns";
 import { ConsoleTable } from "@/components/console/console";
 import { useQuery } from "@tanstack/react-query";
@@ -20,10 +20,10 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter();
   if (!id) router.push("/");
 
-  const { data } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      return await getLogs(id);
+      return await getMessageLogs(id);
     },
     refetchInterval: 2000,
   });

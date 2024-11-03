@@ -29,7 +29,6 @@ export default function Graph({ className }: { className?: string }) {
     },
     refetchInterval: 2000,
   });
-  console.log(data);
 
   return (
     <Card className={cn("flex flex-col h-full", className)}>
@@ -41,11 +40,11 @@ export default function Graph({ className }: { className?: string }) {
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="hour"
+              dataKey="key"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              // tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => new Date(value).toLocaleTimeString()}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar dataKey="doc_count" fill="var(--color-doc_count)" radius={4} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { getLogs } from "@/actions";
+import { getMessageLogs } from "@/actions";
 import Alerts, { generateContent, MessageLog } from "@/components/alerts";
 import { columns } from "@/components/console/columns";
 import { ConsoleTable } from "@/components/console/console";
@@ -11,7 +11,7 @@ export default function Home() {
   const { data } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      return await getLogs("10467445722039618392");
+      return await getMessageLogs(undefined);
     },
     refetchInterval: 2000,
   });

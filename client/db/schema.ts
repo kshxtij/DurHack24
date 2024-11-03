@@ -1,13 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
 const Level = {
-    CRITICAL: 'critical',
-    ERROR: 'error',
-    WARN: 'warn',
-    INFO: 'info',
-    DEBUG: 'debug'
+  CRITICAL: "critical",
+  ERROR: "error",
+  WARN: "warn",
+  INFO: "info",
+  DEBUG: "debug",
 };
 
 const AlertSchema = new Schema({
@@ -17,4 +17,4 @@ const AlertSchema = new Schema({
   messageContains: String,
 });
 
-export default mongoose.model('Alert', AlertSchema);
+export default mongoose.model("Alert", AlertSchema);

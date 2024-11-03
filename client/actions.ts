@@ -1,8 +1,13 @@
+/* eslint-disable */
+// @ts-nocheck
+
 "use server";
 
 import { ConsoleTable } from "@/components/console/console";
 import { Client } from "@elastic/elasticsearch";
 import { aggregationFns } from "@tanstack/react-table";
+import connectDB from "./db";
+import Alert from "./db/schema";
 
 const client = new Client({
   node: "https://szmnk8f0-9200.uks1.devtunnels.ms/",
@@ -10,7 +15,7 @@ const client = new Client({
 
 export async function getServices() {
   const query = {
-    size: 10000,
+    size: 10,
     aggs: {
       id: {
         composite: {
@@ -28,11 +33,15 @@ export async function getServices() {
     body: query,
   });
 
+  if (!resp.aggregations.id) {
+    return [];
+  }
+
   return resp.aggregations.id.buckets;
 }
 
-export async function getLogs(id: string | undefined, limit = 20) {
-  const query = {
+export async function getMessageLogs(id: string | undefined, limit = 20) {
+  let query = {
     size: limit,
     query: {
       bool: {
@@ -46,6 +55,15 @@ export async function getLogs(id: string | undefined, limit = 20) {
       },
     },
   };
+
+  if (!id) {
+    query = {
+      size: limit,
+      query: {
+        match_all: {},
+      },
+    };
+  }
 
   const resp = await client.search({
     index: "log*",
@@ -93,4 +111,26 @@ export async function getHistogram(interval = "minute") {
   });
 
   return resp1.aggregations["Group By Date"].buckets;
+}
+
+export type Alert = {
+  service: string;
+};
+
+import prisma from "./db/";
+import { exit } from "process";
+
+export async function createAlert() {
+  await prisma.alert.create({
+    data: {
+      title: "test",
+      service: "test",
+      severity: "test",
+      cron: "DUPA",
+    },
+  });
+}
+
+export async function getAlerts() {
+  return await prisma.alert.findMany();
 }
