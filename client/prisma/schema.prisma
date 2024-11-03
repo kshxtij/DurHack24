@@ -8,10 +8,19 @@ generator client {
 }
 
 
-model Alert {
+model Automation {
   id       Int      @id @default(autoincrement())
   title     String
   service  String
   severity String
   cron     String
+  email   String
+}
+
+model Alert {
+  id          Int      @id @default(autoincrement())
+  email       String
+  createdAt   DateTime @default(now())
+  service  String
+  severity String
 }

@@ -119,18 +119,16 @@ export type Alert = {
 
 import prisma from "./db/";
 import { exit } from "process";
+import { Automation } from "@prisma/client";
 
-export async function createAlert() {
-  await prisma.alert.create({
+export async function createAutomation(data:  Omit<Automation, "id">) {
+  await prisma.automation.create({
     data: {
-      title: "test",
-      service: "test",
-      severity: "test",
-      cron: "DUPA",
+      ...data,
     },
   });
 }
 
-export async function getAlerts() {
-  return await prisma.alert.findMany();
+export async function getAutomations() {
+  return await prisma.automation.findMany();
 }
