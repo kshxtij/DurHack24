@@ -77,3 +77,25 @@ async def fetch_logs(websocket):
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     await fetch_logs(websocket)
+
+@app.get("/getServices")
+async def get_services():
+    query = {
+        "size": 0,
+        "aggs": {
+            "services": {
+                "terms": {
+                    "field": "service.keyword"
+                }
+            }
+        }
+    }
+
+    resp = await client.search(
+        index="log*",
+        body=query
+    )
+
+    services = resp.get('aggregations', {}).get('services', {}).get('buckets', [])
+    services = [service['key'] for service in services]
+    return services
