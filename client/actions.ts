@@ -31,9 +31,9 @@ export async function getServices() {
   return resp.aggregations.id.buckets;
 }
 
-export async function getLogs(id: string | undefined) {
+export async function getLogs(id: string | undefined, limit = 20) {
   const query = {
-    size: 10000,
+    size: limit,
     query: {
       bool: {
         must: [
@@ -72,4 +72,25 @@ export async function getLogs(id: string | undefined) {
   }
 
   return result;
+}
+
+export async function getHistogram(interval = "minute") {
+  const query = {
+    aggs: {
+      "Group By Date": {
+        date_histogram: {
+          field: "@timestamp",
+          interval: "minute",
+          format: "k",
+        },
+      },
+    },
+  };
+
+  const resp1 = await client.search({
+    index: "log*",
+    body: query,
+  });
+
+  return resp1.aggregations["Group By Date"].buckets;
 }
