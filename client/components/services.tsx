@@ -18,13 +18,13 @@ export default function Services() {
     <div>
       {services?.map((service) => (
         <Link
-          key={service.key}
-          href={`/service/${service.key}`}
+          key={service.key.id}
+          href={`/service/${service.key.id}`}
           className="flex flex-col rounded-lg py-1 px-2 hover:bg-muted"
         >
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full animate-pulse bg-green-500"></div>
-            {service.key}
+            {service.key.service}
           </div>
         </Link>
       ))}

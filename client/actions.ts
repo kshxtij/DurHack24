@@ -1,5 +1,6 @@
 "use server";
 
+import { ConsoleTable } from "@/components/console/console";
 import { Client } from "@elastic/elasticsearch";
 import { aggregationFns } from "@tanstack/react-table";
 
@@ -12,9 +13,11 @@ export async function getServices() {
     size: 10000,
     aggs: {
       id: {
-        terms: {
-          field: "id",
-          size: 100,
+        composite: {
+          sources: [
+            { id: { terms: { field: "id.keyword" } } },
+            { service: { terms: { field: "service.keyword" } } },
+          ],
         },
       },
     },
@@ -24,6 +27,7 @@ export async function getServices() {
     index: "log*",
     body: query,
   });
+
   return resp.aggregations.id.buckets;
 }
 
@@ -52,18 +56,18 @@ export async function getLogs(id: string | undefined) {
   const result: MessageLog[] = [];
 
   const levelMap = {
-    "[INFO]": "info",
-    "[ERROR]": "error",
-    "[DEBUG]": "debug",
-    "[WARNING]": "warn",
-    "[CRITICAL]": "critical",
+    INFO: "info",
+    ERROR: "error",
+    DEBUG: "debug",
+    WARNING: "warn",
+    CRITICAL: "critical",
   };
 
   for (const log of logs) {
     result.push({
       time: log._source["@timestamp"],
-      level: levelMap[log._source.log_level],
-      content: log._source.log,
+      level: levelMap[log._source.logLevel],
+      content: log._source.logStatement,
     });
   }
 

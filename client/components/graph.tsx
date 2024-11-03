@@ -24,7 +24,7 @@ export default function Graph({ className }: { className?: string }) {
 
   const currentHours = new Date().getHours();
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 40; i++) {
     const date = new Date();
     date.setHours(currentHours - i);
 
