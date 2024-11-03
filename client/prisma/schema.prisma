@@ -15,6 +15,7 @@ model Automation {
   severity String
   cron     String
   email   String
+  trigger String
 }
 
 model Alert {

@@ -78,6 +78,7 @@ export default function AlertsPage() {
         email: email,
         severity: severity,
         service: serviceValue,
+        trigger: severity,
         title: title,
       })
 
@@ -158,7 +159,7 @@ export default function AlertsPage() {
             <Label htmlFor="email">Email</Label>
             <Input name="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-            <Label htmlFor="severity">Severity</Label>
+            <Label htmlFor="severity">Trigger when Severity Level</Label>
             <select
               name="severity"
               value={severity}

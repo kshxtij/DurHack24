@@ -1,29 +1,74 @@
 import { EmailTemplate } from "@/components/email-template";
 import prisma from "@/db";
-import { Alert } from "@prisma/client";
+import { Alert, Automation } from "@prisma/client";
 
 import { Resend } from 'resend';
 
 // dotconfig .env.local
 import dotenv from 'dotenv'
+import { Client } from "@elastic/elasticsearch";
 dotenv.config({
     path: '.env.local'
 })
 
 console.log(process.env.RESEND_API_KEY)
 const resend = new Resend(process.env.RESEND_API_KEY);
+const client = new Client({
+    node: "https://szmnk8f0-9200.uks1.devtunnels.ms/",
+});
 
 
 
 
 
-function getAlertsToRun(alerts: Alert[]) {
+function getAlertsToRun(alerts: Automation[]) {
     return alerts.filter(alert => {
         const minuteNow = new Date().getMinutes()
         const cron = alert.cron.split(' ')
         const minute = cron[0]
+        if (minute === '*') {
+            return true
+        }
         return minuteNow === parseInt(minute)
     })
+}
+
+
+async function runAutomation(automation: Automation) {
+    const query = {
+        size: 100,
+        query: {
+            bool: {
+                must: [
+                    {
+                        term: {
+                            "id.keyword": automation.service,
+                        },
+                    },
+                    {
+                        term: {
+                            "logLevel.keyword": automation.trigger,
+                        },
+                    },
+                ],
+            },
+        },
+    }
+
+    const resp = await client.search({
+        index: "log*",
+        body: query,
+    })
+
+    console.log(automation)
+    console.log(resp)
+
+    if (resp.hits.hits.length > 0) {
+        return true
+    }
+
+    return false
+
 }
 
 async function main() {
@@ -31,40 +76,47 @@ async function main() {
     // store alerts 
 
     await prisma.alert.deleteMany()
-    const alerts: Alert[] = []
+    const automations: Automation[] = []
     setInterval(async () => {
-        const newAlerts = await prisma.alert.findMany()
-        for (const alert of newAlerts) {
-            if (!alerts.find(a => a.id === alert.id)) {
-                alerts.push(alert)
-                console.log(alert)
+        const newAutomations = await prisma.automation.findMany()
+        for (const automation of newAutomations) {
+            if (!automations.find(a => a.id === automation.id)) {
+                automations.push(automation)
+                console.log(automations)
             }
         }
-        console.log('Checking for new alerts')
+        console.log('Checking for new automations')
     }, 5000)
 
     console.log('Worker started')
 
     setInterval(async () => {
-        console.log('Checking for alerts to run')
-        console.log(`There are ${alerts.length} alerts`)
-        const alertsToRun = getAlertsToRun(alerts)
+        console.log('Checking for automations to run')
+        console.log(`There are ${automations.length} alerts`)
+        const automationsToRun = getAlertsToRun(automations)
 
-        for (const alert of alertsToRun) {
-            console.log('Running alert', alert)
+        for (const automation of automationsToRun) {
+            console.log('Running automation', automation)
 
-            // ok lets send emial because conditonn is true 
-        const { data, error } = await resend.emails.send({
-            from: 'Durhack <no-reply@durhack24.nkdem.net>',
-            to: ['nikodemb@pm.me'],
-            subject: `${alert.severity} alert: ${alert.appName}`,
-            react: EmailTemplate({ firstName: 'John' }),
-          });
+            const sendEmail = await runAutomation(automation)
 
-          if (error) {
-            console.error(error);
-          }
-            console.log(data);
+            console.log('Should send email', sendEmail)
+            if (sendEmail) {
+                console.log('Sending email')
+                // ok lets send emial because conditonn is true 
+                // ok lets send emial because conditonn is true 
+                const { data, error } = await resend.emails.send({
+                    from: 'Durhack <no-reply@durhack24.nkdem.net>',
+                    to: ['nikodemb@pm.me'],
+                    subject: `${automation.severity} alert: ${automation.title}`,
+                    react: EmailTemplate({ firstName: 'John' }),
+                });
+
+                if (error) {
+                    console.error(error);
+                }
+                console.log(data);
+            }
         }
     }, 5000)
 
