@@ -42,7 +42,7 @@ function AlertComp({ alert }: { alert: Alert }) {
 
 export default function Alerts({ className }: { className?: string }) {
   const { data } = useQuery({
-    queryKey: ["alerts"],
+    queryKey: ["alerts", "all"],
     queryFn: async () => {
       return getAlerts();
     },
@@ -58,6 +58,9 @@ export default function Alerts({ className }: { className?: string }) {
         <div className=" flex flex-col gap-2 overflow-auto h-full w-full p-1 rounded-md">
           {data &&
             data.map((alert, index) => <AlertComp key={index} alert={alert} />)}
+          {(!data || data.length === 0) && (
+            <div className="text-center">No alerts</div>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -38,6 +38,11 @@ export const columns: ColumnDef<MessageLog>[] = [
     ),
   },
   {
+    accessorKey: "service",
+    header: "Service",
+    cell: ({ row }) => <div className="w-full">{row.original.service}</div>,
+  },
+  {
     accessorKey: "content",
     header: "Content",
     cell: ({ row }) => <div className="w-full">{row.original.content}</div>,

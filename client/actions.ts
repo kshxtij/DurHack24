@@ -71,7 +71,7 @@ export async function getMessageLogs(id: string | undefined, limit = 20) {
   });
   const logs = resp.hits.hits;
 
-  const result: MessageLog[] = [];
+  const result = [];
 
   const levelMap = {
     INFO: "info",
@@ -86,6 +86,7 @@ export async function getMessageLogs(id: string | undefined, limit = 20) {
       time: log._source["@timestamp"],
       level: levelMap[log._source.logLevel],
       content: log._source.logStatement,
+      service: log._source.service,
     });
   }
 
@@ -121,7 +122,7 @@ import prisma from "./db/";
 import { exit } from "process";
 import { Automation } from "@prisma/client";
 
-export async function createAutomation(data:  Omit<Automation, "id">) {
+export async function createAutomation(data: Omit<Automation, "id">) {
   await prisma.automation.create({
     data: {
       ...data,

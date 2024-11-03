@@ -14,18 +14,18 @@ export default function ServicePage({ params }: { params: { id: string } }) {
     queryFn: async () => {
       return await getServices();
     },
-    refetchInterval: 5000,
   });
 
   const router = useRouter();
   if (!id) router.push("/");
 
-  const { data, isFetching } = useQuery({
-    queryKey: ["data"],
+  const { data } = useQuery({
+    queryKey: ["data", id],
     queryFn: async () => {
       return await getMessageLogs(id);
     },
     refetchInterval: 2000,
+    refetchIntervalInBackground: true,
   });
 
   if (!services) {
@@ -41,7 +41,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
     <div className="w-full h-full flex flex-col gap-3">
       <h1 className="text-2xl font-bold">{service.key.service}</h1>
       <div className="overflow-auto flex-grow min-h-0">
-        <ConsoleTable data={data} columns={columns} />
+        <ConsoleTable data={data ?? []} columns={columns} />
       </div>
     </div>
   );

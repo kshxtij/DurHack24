@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -56,6 +57,9 @@ export function ConsoleTable<TData, TValue>({
           {table.getRowModel().rows && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                className={cn(
+                  row.original.level === "critical" && "bg-red-300"
+                )}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >

@@ -19,30 +19,32 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createAutomation, getAlerts, getAutomations, getServices } from "@/actions";
+import {
+  createAutomation,
+  getAlerts,
+  getAutomations,
+  getServices,
+} from "@/actions";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { AutomationTable } from "@/components/automations/automations";
-import { columns } from "@/components/automations/columns";
+} from "@/components/ui/alert-dialog";
 
 const levelMap = {
-    INFO: "info",
-    ERROR: "error",
-    DEBUG: "debug",
-    WARNING: "warn",
-    CRITICAL: "critical",
-  };
+  INFO: "info",
+  ERROR: "error",
+  DEBUG: "debug",
+  WARNING: "warn",
+  CRITICAL: "critical",
+};
 
 export default function AlertsPage() {
   const [serviceOpen, setServiceOpen] = useState(false);
@@ -52,7 +54,6 @@ export default function AlertsPage() {
   const [cron, setCron] = useState("* * * * *");
   const [email, setEmail] = useState("");
   const [severity, setSeverity] = useState<keyof typeof levelMap>("INFO");
-
 
   const { data: services } = useQuery({
     queryKey: ["services"],
@@ -65,13 +66,12 @@ export default function AlertsPage() {
   const { data: automations } = useQuery({
     queryKey: ["automations"],
     queryFn: async () => {
-      return getAutomations()
+      return getAutomations();
     },
-  staleTime: 1000,
-  })
+    staleTime: 1000,
+  });
 
-  const queryClient = useQueryClient()
-
+  const queryClient = useQueryClient();
 
   const mutate = useMutation({
     mutationFn: async () => {
@@ -82,13 +82,13 @@ export default function AlertsPage() {
         service: serviceValue,
         trigger: severity,
         title: title,
-      })
+      });
 
       queryClient.invalidateQueries({
         queryKey: ["automations"],
-      })
-    }
-  })
+      });
+    },
+  });
 
   if (!services) {
     return null;
@@ -96,19 +96,26 @@ export default function AlertsPage() {
 
   return (
     <div className="w-full h-full flex flex-col gap-3">
-      <h1 className="text-2xl font-bold">Automations</h1>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <div className="flex justify-end">
-            <Button>Create Automation</Button>
-          </div>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold">Automations</h1>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button>
+              <Plus size={20} />
+              New Automation
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Create Automation</AlertDialogTitle>
             </AlertDialogHeader>
             <Label htmlFor="title">Title</Label>
-            <Input name="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input
+              name="title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
             <Label htmlFor="service">Service</Label>
 
@@ -120,7 +127,8 @@ export default function AlertsPage() {
                   className="w-[200px] justify-between"
                 >
                   {serviceValue
-                    ? services.find((s) => s.key.id === serviceValue).key.service
+                    ? services.find((s) => s.key.id === serviceValue).key
+                        .service
                     : "Select a service..."}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -143,7 +151,9 @@ export default function AlertsPage() {
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              serviceValue === s.value ? "opacity-100" : "opacity-0"
+                              serviceValue === s.value
+                                ? "opacity-100"
+                                : "opacity-0"
                             )}
                           />
                           {s.key.service}
@@ -156,16 +166,28 @@ export default function AlertsPage() {
             </Popover>
 
             <Label htmlFor="cron">CRON</Label>
-            <Input name="cron" type="text" value={cron} onChange={(e) => setCron(e.target.value)} />
+            <Input
+              name="cron"
+              type="text"
+              value={cron}
+              onChange={(e) => setCron(e.target.value)}
+            />
 
             <Label htmlFor="email">Email</Label>
-            <Input name="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input
+              name="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
             <Label htmlFor="severity">Trigger when Severity Level</Label>
             <select
               name="severity"
               value={severity}
-              onChange={(e) => setSeverity(e.target.value as keyof typeof levelMap)}
+              onChange={(e) =>
+                setSeverity(e.target.value as keyof typeof levelMap)
+              }
             >
               {Object.keys(levelMap).map((key) => (
                 <option key={key} value={key}>
@@ -175,19 +197,24 @@ export default function AlertsPage() {
             </select>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => {
-                mutate.mutate()
-              }}>Continue</AlertDialogAction>
+              <AlertDialogAction
+                onClick={() => {
+                  mutate.mutate();
+                }}
+              >
+                Continue
+              </AlertDialogAction>
             </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
       <div>
-        {/* {automations?.map((a) => (
+        {automations?.map((a) => (
           <div>
             <p>test</p>
-            {a.title}</div>
-        ))} */}
-        <AutomationTable data={automations ?? []} columns={columns} />
+            {a.title}
+          </div>
+        ))}
       </div>
     </div>
   );
