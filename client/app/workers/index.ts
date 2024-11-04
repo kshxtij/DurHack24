@@ -105,14 +105,7 @@ async function main() {
                 console.log('Sending email')
                 // ok lets send emial because conditonn is true 
                 // ok lets send emial because conditonn is true 
-                const { data, error } = await resend.emails.send({
-                    from: 'Durhack <no-reply@durhack24.nkdem.net>',
-                    to: [`${automation.email}`],
-                    subject: `${automation.severity} alert: ${automation.title}`,
-                    react: EmailTemplate({ firstName: 'John' }),
-                });
-
-                await prisma.alert.create({
+                const record = await prisma.alert.create({
                     data: {
                         email: automation.email,
                         service: automation.service,
@@ -121,6 +114,13 @@ async function main() {
                         title: automation.title,
                     }
                 })
+                const { data, error } = await resend.emails.send({
+                    from: 'Durhack <no-reply@durhack24.nkdem.net>',
+                    to: [`${automation.email}`],
+                    subject: `${automation.severity} alert: ${automation.title}`,
+                    react: EmailTemplate(record)
+                });
+
 
                 if (error) {
                     console.error(error);

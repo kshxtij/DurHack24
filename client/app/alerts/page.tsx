@@ -128,9 +128,8 @@ export default function AlertsPage() {
               <PopoverContent className="w-[200px] p-0">
                 <Command>
                   <CommandInput placeholder="Search framework..." />
-                  <CommandList>
+                  <CommandList className="">
                     <CommandEmpty>No framework found.</CommandEmpty>
-                    <CommandGroup>
                       {services.map((s, i) => (
                         <CommandItem
                           key={i}
@@ -142,14 +141,13 @@ export default function AlertsPage() {
                         >
                           <Check
                             className={cn(
-                              "mr-2 h-4 w-4",
+                              "h-4 w-4",
                               serviceValue === s.value ? "opacity-100" : "opacity-0"
                             )}
                           />
                           {s.key.service}
                         </CommandItem>
                       ))}
-                    </CommandGroup>
                   </CommandList>
                 </Command>
               </PopoverContent>

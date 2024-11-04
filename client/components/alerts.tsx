@@ -19,7 +19,7 @@ export type MessageLog = {
 };
 
 const colorMap = {
-  low: "ring-neutral-100",
+  low: "bg-neutral-100",
   medium: "bg-yellow-100",
   high: "bg-orange-100",
   critical: "bg-red-100",
@@ -28,13 +28,13 @@ const colorMap = {
 function AlertComp({ alert }: { alert: Alert }) {
   return (
     <div
-      className={`flex items-center text-sm rounded-md py-1 px-2 ${
-        colorMap[alert.severity as keyof typeof colorMap] ?? colorMap["low"]
-      }`}
+      className={`flex items-center text-sm rounded-md py-1 px-2 ${colorMap[alert.severity as keyof typeof colorMap] ?? colorMap["low"]
+        }`}
     >
       <Info size={25} className="mr-2" />
       <div className="flex flex-col">
-        <div className="font-bold flex items-center">{alert.title}</div>
+        <div className="font-bold w-full flex items-center">{alert.title}
+        </div>
       </div>
     </div>
   );
@@ -55,7 +55,7 @@ export default function Alerts({ className }: { className?: string }) {
         <CardTitle>Alerts</CardTitle>
       </CardHeader>
       <CardContent className="min-h-0 relative">
-        <div className=" flex flex-col gap-2 overflow-auto h-full w-full p-1 rounded-md">
+        <div className=" flex flex-col gap-2 overflow-auto h-full w-full rounded-md">
           {data &&
             data.map((alert, index) => <AlertComp key={index} alert={alert} />)}
         </div>
